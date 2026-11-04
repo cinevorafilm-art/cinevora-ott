@@ -1,0 +1,13 @@
+{
+  "appId": "com.cinevora.films",
+  "appName": "CineVora Films",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://cinevorafilms.in",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
