@@ -12,31 +12,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK Environment
-        uses: android-actions/setup-android@v3
-
-      - name: Clean Local Properties & Sync Capacitor
+      - name: Setup Android SDK Environment Path
         run: |
-          rm -f android/local.properties
-          npm install
-          npx @capacitor/cli sync android
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          chmod +x android/gradlew
 
-      - name: Fix Permissions & Build Debug APK
+      - name: Build Debug APK
         run: |
           cd android
-          chmod +x gradlew
-          ./gradlew clean assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload CineVora APK
         uses: actions/upload-artifact@v4
