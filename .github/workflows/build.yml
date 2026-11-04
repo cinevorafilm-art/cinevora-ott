@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -17,24 +17,26 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies & Sync Capacitor
-        run: |
-          npm install
-          npx @capacitor/cli sync android
-
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Make Gradlew Executable
-        run: chmod +x android/gradlew
+      - name: Setup Android SDK Environment
+        uses: android-actions/setup-android@v3
 
-      - name: Build Debug APK
+      - name: Clean Local Properties & Sync Capacitor
+        run: |
+          rm -f android/local.properties
+          npm install
+          npx @capacitor/cli sync android
+
+      - name: Fix Permissions & Build Debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon
+          chmod +x gradlew
+          ./gradlew clean assembleDebug --no-daemon
 
       - name: Upload CineVora APK
         uses: actions/upload-artifact@v4
